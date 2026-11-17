@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#070914;color:#eef0ff;font-family:'DM Sans',sans-serif}
+h1,h2,h3,.brand{font-family:'Space Grotesk',sans-serif}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}
+.glass{background:linear-gradient(145deg,rgba(24,29,54,.88),rgba(12,16,31,.82));border:1px solid rgba(148,163,255,.14);box-shadow:0 18px 60px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.04);backdrop-filter:blur(18px)}
+.neon{box-shadow:0 0 30px rgba(139,92,246,.18)}.muted{color:#929bb8}.gradient-text{background:linear-gradient(90deg,#c4b5fd,#67e8f9);background-clip:text;color:transparent}
+.btn{border-radius:12px;padding:10px 15px;background:linear-gradient(100deg,#7c3aed,#2563eb);font-weight:700;transition:.2s}.btn:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.input{width:100%;border:1px solid #2b3454;background:#0a0e1e;border-radius:10px;padding:11px 12px;color:#fff;outline:none}.input:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px #8b5cf622}
+.card{border-radius:20px;padding:20px}.label{font-size:12px;color:#98a3c5;text-transform:uppercase;letter-spacing:.12em}.sidebar-link{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:12px;color:#aab2cf;font-size:14px}.sidebar-link:hover,.sidebar-link.active{background:#8b5cf622;color:#fff;border:1px solid #8b5cf644}
+.grid-bg{background-image:linear-gradient(rgba(139,92,246,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.035) 1px,transparent 1px);background-size:42px 42px}
