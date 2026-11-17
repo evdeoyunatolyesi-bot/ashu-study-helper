@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,18 +12,17 @@ export default function Login() {
   const [busy, setBusy] = useState(false);
 
   const router = useRouter();
+  const supabase = createClient();
 
-  async function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setBusy(true);
     setError("");
 
     try {
-      const supabase = createClient();
-
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       });
 
@@ -42,28 +41,29 @@ export default function Login() {
   }
 
   async function forgotPassword() {
-    if (!email) {
+    if (!email.trim()) {
       setError("Enter your email first.");
       return;
     }
 
+    setBusy(true);
     setError("");
 
     try {
-      const supabase = createClient();
-
       const { error } =
-        await supabase.auth.resetPasswordForEmail(email, {
+        await supabase.auth.resetPasswordForEmail(email.trim(), {
           redirectTo: `${window.location.origin}/reset-password`,
         });
 
       if (error) {
         setError(error.message);
       } else {
-        setError("Password reset email sent successfully!");
+        setError("Password reset email sent. Check your inbox.");
       }
     } catch {
       setError("Unable to send reset email. Please try again.");
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -73,10 +73,7 @@ export default function Login() {
         onSubmit={submit}
         className="glass card w-full max-w-md"
       >
-        <Link
-          href="/"
-          className="brand font-bold gradient-text"
-        >
+        <Link href="/" className="brand font-bold gradient-text">
           ASHU STUDY HELPER
         </Link>
 
@@ -88,27 +85,25 @@ export default function Login() {
           Sign in to continue your study journey.
         </p>
 
-        <label className="label">
-          Email
-        </label>
+        <label className="label">Email</label>
 
         <input
-          className="input mt-2 mb-4"
+          className="input mt-2 mb-4 w-full"
           type="email"
           placeholder="Enter your email"
+          autoComplete="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <label className="label">
-          Password
-        </label>
+        <label className="label">Password</label>
 
         <input
-          className="input mt-2 mb-5"
+          className="input mt-2 mb-5 w-full"
           type="password"
           placeholder="Enter your password"
+          autoComplete="current-password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -131,7 +126,8 @@ export default function Login() {
         <button
           type="button"
           onClick={forgotPassword}
-          className="text-xs text-cyan-300 mt-4"
+          disabled={busy}
+          className="text-xs text-cyan-300 mt-4 disabled:opacity-50"
         >
           Forgot password?
         </button>
