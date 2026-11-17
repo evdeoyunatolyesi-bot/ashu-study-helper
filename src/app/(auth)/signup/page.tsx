@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -11,45 +12,31 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const supabase = createClient();
 
-  async function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setError("");
     setDone(false);
-    setLoading(true);
 
-    try {
-      const supabase = createClient();
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: name,
-          },
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
         },
-      });
+      },
+    });
 
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
-      if (data.session) {
-        router.push("/app");
-        router.refresh();
-      } else {
-        setDone(true);
-      }
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    if (error) {
+      setError(error.message);
+    } else if (data.session) {
+      router.push("/app");
+    } else {
+      setDone(true);
     }
   }
 
@@ -72,9 +59,8 @@ export default function Signup() {
         </p>
 
         <label className="label">Student name</label>
-
         <input
-          className="input mt-2 mb-4 w-full"
+          className="input mt-2 mb-4"
           type="text"
           required
           value={name}
@@ -82,9 +68,8 @@ export default function Signup() {
         />
 
         <label className="label">Email</label>
-
         <input
-          className="input mt-2 mb-4 w-full"
+          className="input mt-2 mb-4"
           type="email"
           required
           value={email}
@@ -96,7 +81,7 @@ export default function Signup() {
         </label>
 
         <input
-          className="input mt-2 mb-5 w-full"
+          className="input mt-2 mb-5"
           type="password"
           minLength={8}
           required
@@ -116,12 +101,8 @@ export default function Signup() {
           </p>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn w-full disabled:opacity-50"
-        >
-          {loading ? "Creating account..." : "Create account"}
+        <button type="submit" className="btn w-full">
+          Create account
         </button>
 
         <p className="text-sm text-slate-400 mt-6">
@@ -133,4 +114,4 @@ export default function Signup() {
       </form>
     </main>
   );
-          }
+}
